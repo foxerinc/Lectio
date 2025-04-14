@@ -27,5 +27,9 @@ data class BookEntity(
     @ColumnInfo(name = "totalPage")
     val totalPage: Int,
     @ColumnInfo(name = "isFavorite")
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+    @ColumnInfo(name = "personal_rating")
+    val personalRating: Float? = null,
+    @ColumnInfo(name = "notes")
+    val notes: String? = null
 )

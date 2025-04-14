@@ -12,7 +12,9 @@ fun BookEntity.toDomain(): Book {
         totalPage = this.totalPage,
         currentPage = this.currentPage,
         isFavorite = this.isFavorite,
-        status = this.status
+        status = this.status,
+        personalRating = this.personalRating,
+        notes = this.notes
     )
 }
 
@@ -27,6 +29,8 @@ fun Book.toEntity(): BookEntity {
         currentPage = this.currentPage,
         isFavorite = this.isFavorite,
         status = this.status,
-        bookAddedInMillis = System.currentTimeMillis() // use current timestamp on insert
+        bookAddedInMillis = System.currentTimeMillis(),
+        personalRating = this.personalRating,
+        notes = this.notes
     )
 }

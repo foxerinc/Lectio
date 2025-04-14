@@ -11,5 +11,7 @@ data class Book(
     val totalPage: Int,
     val currentPage: Int,
     val isFavorite: Boolean,
-    val status: BookStatusType
+    val status: BookStatusType,
+    val personalRating: Float? = null,
+    val notes: String? = null
 )
