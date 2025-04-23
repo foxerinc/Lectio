@@ -7,8 +7,8 @@ import com.booktracker.lectio.utilis.BookStatusType
 import kotlinx.coroutines.flow.Flow
 
 interface BookRepository {
-    fun getAllBooks(): Flow<List<Book>>
-    fun getBooksByStatus(status: BookStatusType): Flow<List<BookWithGenres>>
+    fun getAllBooks(): Flow<List<BookWithGenres>>
+    fun getBooksByStatus(status: BookStatusType?): Flow<List<BookWithGenres>>
     suspend fun insertBook(book: Book)
     suspend fun updateBook(book: Book)
     suspend fun deleteBook(book: Book)

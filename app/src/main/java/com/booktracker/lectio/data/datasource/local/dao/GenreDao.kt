@@ -25,6 +25,6 @@ interface GenreDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookGenreCrossRef(crossRef: BookGenreCrossRef)
 
-    @Query("DELETE FROM book_genre_cross_ref WHERE bookId = :bookId")
+    @Query("DELETE FROM book_genre_cross_ref WHERE book_id = :bookId")
     suspend fun deleteGenresByBook(bookId: Int)
 }

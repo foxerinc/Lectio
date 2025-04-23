@@ -25,20 +25,22 @@ data class GenreEntity(
         ForeignKey(
             entity = BookEntity::class,
             parentColumns = ["book_id"],
-            childColumns = ["bookId"],
+            childColumns = ["book_id"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = GenreEntity::class,
             parentColumns = ["genre_id"],
-            childColumns = ["genreId"],
+            childColumns = ["genre_id"],
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("bookId"), Index("genreId")]
+    indices = [Index("book_id"), Index("genre_id")]
 )
 data class BookGenreCrossRef(
+    @ColumnInfo(name = "book_id")
     val bookId: Int,
+    @ColumnInfo(name = "genre_id")
     val genreId: Int
 )
 

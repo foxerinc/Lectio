@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.booktracker.lectio"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.booktracker.lectio"
@@ -84,4 +84,10 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-compiler:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("androidx.compose.animation:animation:1.6.0")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
+
 }

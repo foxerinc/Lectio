@@ -6,8 +6,8 @@ import com.booktracker.lectio.domain.repository.BookRepository
 import com.booktracker.lectio.utilis.BookStatusType
 import kotlinx.coroutines.flow.Flow
 
-class GetCurrentlyReadingBooksUseCase (private val repository: BookRepository) {
-    operator fun invoke(): Flow<List<BookWithGenres>> {
-        return repository.getBooksByStatus(BookStatusType.CURRENTLY_READING)
+class GetBooksByStatusUseCase (private val repository: BookRepository) {
+    operator fun invoke(status: BookStatusType? = null): Flow<List<BookWithGenres>> {
+        return repository.getBooksByStatus(status)
     }
 }

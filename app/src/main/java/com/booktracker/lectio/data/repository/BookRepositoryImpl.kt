@@ -19,16 +19,21 @@ class BookRepositoryImpl @Inject constructor(
     private val appDatabase: LectioDatabase
 ) : BookRepository {
 
-    override fun getAllBooks(): Flow<List<Book>> {
-        return appDatabase.bookDao.getAllBooks().map { list ->
+    override fun getAllBooks(): Flow<List<BookWithGenres>> {
+        return appDatabase.bookDao.getBooksWithGenres().map { list ->
             list.map { it.toDomain() }
         }
     }
 
-    override fun getBooksByStatus(status: BookStatusType): Flow<List<BookWithGenres>> {
-        return appDatabase.bookDao.getListOfBookByReadingStatus(status).map { list ->
-            list.map { it.toDomain() }
+    override fun getBooksByStatus(status: BookStatusType?): Flow<List<BookWithGenres>> {
+        return if (status == null){
+            getAllBooks()
+        }else{
+            appDatabase.bookDao.getListOfBookByReadingStatus(status).map { list ->
+                list.map { it.toDomain() }
+            }
         }
+
     }
 
     override suspend fun insertBook(book: Book) {

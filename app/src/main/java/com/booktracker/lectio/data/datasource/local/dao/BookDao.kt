@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.booktracker.lectio.data.datasource.local.entity.BookEntity
 import com.booktracker.lectio.data.datasource.local.entity.BookWithGenresEntity
+import com.booktracker.lectio.domain.model.BookWithGenres
 import com.booktracker.lectio.utilis.BookStatusType
 import com.booktracker.lectio.utilis.CURRENTLY_READING_VALUE
 import kotlinx.coroutines.flow.Flow
@@ -26,9 +27,6 @@ interface BookDao {
     @Query("SELECT * FROM book WHERE status = :status ORDER BY bookAddedInMillis DESC")
     fun getListOfBookByReadingStatus(status: BookStatusType): Flow<List<BookWithGenresEntity>>
 
-    @Transaction
-    @Query("SELECT * FROM book ORDER BY bookAddedInMillis DESC")
-    fun getAllBooks(): Flow<List<BookEntity>>
 
     @Query("SELECT * FROM book WHERE book_id = :id LIMIT 1")
     suspend fun getBookById(id: Int): BookEntity?
@@ -38,7 +36,7 @@ interface BookDao {
     fun getBooksWithGenres(): Flow<List<BookWithGenresEntity>>
 
     @Transaction
-    @Query("SELECT * FROM book WHERE book_id = :bookId")
+    @Query("SELECT * FROM book WHERE book_id = :bookId ORDER BY bookAddedInMillis DESC")
     suspend fun getBookWithGenresById(bookId: Int): BookWithGenresEntity?
 
     @Query("SELECT COUNT(*) FROM book WHERE status = '$CURRENTLY_READING_VALUE' ORDER BY bookAddedInMillis DESC")

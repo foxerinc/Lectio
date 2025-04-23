@@ -8,7 +8,7 @@ import com.booktracker.lectio.data.repository.GenreRepositoryImpl
 import com.booktracker.lectio.domain.repository.BookRepository
 import com.booktracker.lectio.domain.repository.GenreRepository
 import com.booktracker.lectio.domain.usecase.BookUseCases
-import com.booktracker.lectio.domain.usecase.GetCurrentlyReadingBooksUseCase
+import com.booktracker.lectio.domain.usecase.GetBooksByStatusUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,7 +49,7 @@ object AppModule {
     @Singleton
     fun provideBookUseCases(repository: BookRepository): BookUseCases {
         return BookUseCases(
-            getCurrentlyReadingBooks = GetCurrentlyReadingBooksUseCase(repository),
+            getBooksByStatusUseCase = GetBooksByStatusUseCase(repository),
 
         )
     }
