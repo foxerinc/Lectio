@@ -26,6 +26,7 @@
 - State Management: **ViewModel with StateFlow**
 - Background Tasks: **WorkManager**
 - Storage: **PreferencesManager for theme and notification settings**
+- Architecture: **MVVM + Clean Architecture Layers**
   
 
 ## 📸 Screenshot
