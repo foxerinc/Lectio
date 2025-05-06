@@ -4,13 +4,18 @@
 
 [🎥 Demo Aplikasi Lectio]
 
-## ⚠️ Keterbatasan Saat Ini
+## ⚠️ Current Limitations
+- No backup/restore or sync with external services
+  
 
-🔧 Rencana ke depan
+## 🔧 Future Plans
+- Backup and restore (local or cloud-based)
+- Add integration with Google Books or Goodreads for metadata
 
 ## Features
 - **Book Management**: Add, view, and edit books
 - **Navigation**: Seamless bottom navigation between Dashboard, Library, Add Book, Favorites, and Settings screens.
+- Dashboard Stats: Display key book statistics (e.g., total books, total read pages) on the Dashboard for a quick overview.
 - **Library Filter**: Filter books in the Library screen by title, author, or other criteria for easy access.
 - **Nested Screens**: Access detailed book views and edit screens with proper back stack management.
 - **Custom Settings**: Toggle notifications, switch between light, dark, and system themes, and clear all data with confirmation.
@@ -18,15 +23,24 @@
 - **User Feedback**: Inline snackbars for actions like adding books or clearing data.
 - **Responsive Design**: Built with Jetpack Compose for a modern, adaptive UI.
 
+## 🧱 Architecture Overview
+
+- **MVVM** pattern with `ViewModel` and `StateFlow`
+- **Clean Architecture** separating UI, domain, and data layers
+- **Unidirectional data flow**
+- **Dependency Injection** with Hilt
+
+---
+
 ## 🛠️ Tech Stack
-- Language: **Kotlin**
-- UI Framework: **Jetpack Compose**
-- Navigation: **Jetpack Navigation Component**
-- Dependency Injection: **Hilt**
-- State Management: **ViewModel with StateFlow**
-- Background Tasks: **WorkManager**
-- Storage: **PreferencesManager for theme and notification settings**
-- Architecture: **MVVM + Clean Architecture Layers**
+
+- **Language**: Kotlin
+- **UI**: Jetpack Compose
+- **Navigation**: Jetpack Navigation Component
+- **Background Tasks**: WorkManager
+- **Dependency Injection**: Hilt
+- **State Management**: ViewModel + StateFlow
+- **Local Storage**: PreferencesManager (for theme/notification settings)
   
 
 ## 📸 Screenshot
