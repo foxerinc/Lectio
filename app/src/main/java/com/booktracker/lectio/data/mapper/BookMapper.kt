@@ -13,6 +13,7 @@ fun BookEntity.toDomain(): Book {
         currentPage = this.currentPage,
         isFavorite = this.isFavorite,
         status = this.status,
+        bookAddedInMillis = this.bookAddedInMillis,
         personalRating = this.personalRating,
         notes = this.notes
     )
