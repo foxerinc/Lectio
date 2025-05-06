@@ -1,6 +1,6 @@
 package com.booktracker.lectio.domain.model
 
-import com.booktracker.lectio.utilis.BookStatusType
+import com.booktracker.lectio.utils.BookStatusType
 
 data class Book(
     val id: Int,
@@ -12,6 +12,7 @@ data class Book(
     val currentPage: Int,
     val isFavorite: Boolean,
     val status: BookStatusType,
+    val bookAddedInMillis: Long,
     val personalRating: Float? = null,
     val notes: String? = null
 )
