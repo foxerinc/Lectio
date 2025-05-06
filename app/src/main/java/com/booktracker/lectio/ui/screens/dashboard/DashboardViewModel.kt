@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.booktracker.lectio.domain.model.BookWithGenres
 import com.booktracker.lectio.domain.usecase.BookUseCases
-import com.booktracker.lectio.utilis.BookStatusType
+import com.booktracker.lectio.utils.BookStatusType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
