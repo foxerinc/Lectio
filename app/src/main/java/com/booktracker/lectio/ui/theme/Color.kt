@@ -9,7 +9,7 @@ val PrimaryLight = Color(0xFF00695C)
 val OnPrimaryLight = Color(0xFFFFFFFF)
 
 val SecondaryLight = Color(0xFFFF7043)
-val OnSecondaryLight = Color(0xFF000000)
+val OnSecondaryLight = Color(0xFFFFFFFF)
 
 val TertiaryLight = Color(0xFF2E294E)
 val OnTertiaryLight = Color(0xFFFFFFFF)
