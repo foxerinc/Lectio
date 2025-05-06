@@ -1,9 +1,7 @@
 package com.booktracker.lectio.ui.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,12 +28,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,19 +41,18 @@ import com.booktracker.lectio.R
 import com.booktracker.lectio.domain.model.Book
 import com.booktracker.lectio.domain.model.Genre
 import com.booktracker.lectio.ui.theme.LectioTheme
-import com.booktracker.lectio.utilis.BookStatusType
+import com.booktracker.lectio.utils.BookStatusType
 
 
 @Composable
 fun BookCard(
     book: BookWithGenres,
-    onClick: () -> Unit,
+    onClick: (Int) -> Unit,
 
 ) {
     Card(
         modifier = Modifier
-            .padding(8.dp)
-            .clickable { onClick() }
+            .clickable { onClick(book.book.id) }
             .fillMaxWidth()
             .wrapContentHeight()
             .heightIn(max = 400.dp, min = 330.dp),
@@ -166,7 +159,7 @@ fun BookCard(
             BookWithGenres(
                 book = Book(
                     id = index,
-                    title = if (index == 1 )"Book Title ${index} Checking Long Tittle how to see it and how to not see it" else "Book Title ${index} ",
+                    title = if (index == 1) "Book Title ${index} Checking Long Tittle how to see it and how to not see it" else "Book Title ${index} ",
                     author = "Author $index",
                     currentPage = 50 + index * 10,
                     totalPage = 200,
@@ -175,7 +168,8 @@ fun BookCard(
                     description = "",
                     isFavorite = false,
                     personalRating = 4.5f,
-                    notes = ""
+                    notes = "",
+                    bookAddedInMillis = 0L,
                 ),
                 genres = listOf(
                     Genre(1, "Fiction"),
@@ -186,20 +180,28 @@ fun BookCard(
 
         LectioTheme {
             Surface(color = MaterialTheme.colorScheme.background) {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 160.dp),
-                    contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.height(700.dp)
-                ) {
-                    items(sampleBooks) { book ->
-                        BookCard(
-                            book = book,
-                            onClick = {},
-                        )
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
+                ){
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 160.dp),
+                        contentPadding = PaddingValues(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.height(700.dp)
+                    ) {
+                        items(sampleBooks) { book ->
+                            BookCard(
+                                book = book,
+                                onClick = {},
+                            )
+                        }
                     }
                 }
+
             }
         }
     }
