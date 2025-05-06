@@ -3,7 +3,7 @@ package com.booktracker.lectio.domain.usecase
 
 import com.booktracker.lectio.domain.model.BookWithGenres
 import com.booktracker.lectio.domain.repository.BookRepository
-import com.booktracker.lectio.utilis.BookStatusType
+import com.booktracker.lectio.utils.BookStatusType
 import kotlinx.coroutines.flow.Flow
 
 class GetBooksByStatusUseCase (private val repository: BookRepository) {
