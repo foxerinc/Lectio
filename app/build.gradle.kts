@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.dagger.hilt)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.booktracker.lectio"
-        minSdk = 28
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -51,6 +51,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -78,16 +80,22 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.5")
 
     //work
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
 
     //hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-compiler:2.48")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.compose.animation:animation:1.6.0")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
+    implementation("androidx.navigation:navigation-compose:2.8.9")
+
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
 }
