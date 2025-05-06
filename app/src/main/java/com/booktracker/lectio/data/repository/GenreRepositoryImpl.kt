@@ -22,12 +22,21 @@ class GenreRepositoryImpl @Inject constructor(
         }
     }
 
+
     override suspend fun insertGenre(genre: Genre): Long {
         return appDatabase.genreDao.insertGenre(genre.toEntity())
     }
 
+    override suspend fun updateGenreCrossRef(bookId: Int,genreId: Int) {
+        appDatabase.genreDao.updateGenreCrossRef(bookId,genreId)
+    }
+
     override suspend fun getGenreById(id: Int): Genre? {
         return appDatabase.genreDao.getGenreById(id)?.toDomain()
+    }
+
+    override suspend fun getGenreByName(name: String): Genre? {
+        return appDatabase.genreDao.getGenreByName(name)?.toDomain()
     }
 
     override suspend fun assignGenreToBook(bookId: Int, genreId: Int) {
