@@ -3,7 +3,7 @@ package com.booktracker.lectio.data.datasource.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.booktracker.lectio.utilis.BookStatusType
+import com.booktracker.lectio.utils.BookStatusType
 
 @Entity(tableName = "book")
 data class BookEntity(

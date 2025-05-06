@@ -22,9 +22,15 @@ interface GenreDao {
     @Query("SELECT * FROM genres WHERE genre_id = :genreId")
     suspend fun getGenreById(genreId: Int): GenreEntity?
 
+    @Query("SELECT * FROM genres WHERE name = :genreName")
+    suspend fun getGenreByName(genreName: String): GenreEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookGenreCrossRef(crossRef: BookGenreCrossRef)
 
     @Query("DELETE FROM book_genre_cross_ref WHERE book_id = :bookId")
     suspend fun deleteGenresByBook(bookId: Int)
+
+    @Query("UPDATE book_genre_cross_ref SET genre_id = :genreId WHERE book_id = :bookId")
+    suspend fun updateGenreCrossRef(bookId: Int, genreId: Int)
 }

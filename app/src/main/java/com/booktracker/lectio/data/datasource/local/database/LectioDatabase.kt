@@ -8,7 +8,7 @@ import com.booktracker.lectio.data.datasource.local.dao.GenreDao
 import com.booktracker.lectio.data.datasource.local.entity.BookEntity
 import com.booktracker.lectio.data.datasource.local.entity.BookGenreCrossRef
 import com.booktracker.lectio.data.datasource.local.entity.GenreEntity
-import com.booktracker.lectio.utilis.BookStatusTypeConverter
+import com.booktracker.lectio.utils.BookStatusTypeConverter
 
 @Database(
     entities = [BookEntity::class, GenreEntity::class, BookGenreCrossRef::class],
