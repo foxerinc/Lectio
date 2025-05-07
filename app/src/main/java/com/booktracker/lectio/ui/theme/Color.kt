@@ -17,7 +17,7 @@ val OnTertiaryLight = Color(0xFFFFFFFF)
 val BackgroundLight = Color(0xFFFAF9F6)
 val OnBackgroundLight = Color(0xFF2C3E50)
 
-val SurfaceLight = Color(0xFFFAF9F6)
+val SurfaceLight = Color(0xFFFAF7F7)
 val OnSurfaceLight = Color(0xFF2C3E50)
 
 val ErrorLight = Color(0xFFDC2626)

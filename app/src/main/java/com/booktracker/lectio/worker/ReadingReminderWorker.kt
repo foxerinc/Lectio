@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -33,6 +34,7 @@ class ReadingReminderWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
+        Log.d("ReadingReminderWorker", "doWork() called")
         // Fetch Book With Currently Reading Status
         val currentlyReadingBooks = bookUseCases.getBooksByStatusUseCase(BookStatusType.CURRENTLY_READING).first()
         if (currentlyReadingBooks.isEmpty()) {

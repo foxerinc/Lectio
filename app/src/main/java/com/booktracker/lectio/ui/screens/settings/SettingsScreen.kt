@@ -1,6 +1,7 @@
 package com.booktracker.lectio.ui.screens.settings
 
 import android.Manifest
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -32,18 +33,26 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.booktracker.lectio.utils.NotificationScheduler
 import com.booktracker.lectio.utils.PreferencesManager
+import kotlinx.coroutines.launch
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import android.util.Log
 
 @Composable
 fun SettingsScreen(
@@ -53,52 +62,43 @@ fun SettingsScreen(
     val themePreference by viewModel.themePreference.collectAsState()
     val clearDataResult by viewModel.clearDataResult.collectAsState()
     val context = LocalContext.current
+    val activity = context as? Activity
+    val scope = rememberCoroutineScope()
 
     // State for Clear All Data confirmation dialog
     var showClearDataDialog by remember { mutableStateOf(false) }
     var showClearMessage by remember { mutableStateOf(false) }
+    var showSettingsDialog by remember { mutableStateOf(false) }
+
+
     val snackbarHostState = remember { SnackbarHostState() }
 
 
 
-    val hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.POST_NOTIFICATIONS
-        ) == PackageManager.PERMISSION_GRANTED
-    } else {
-        true // Permission not required below Android 13
-    }
-
-    // Launcher to request notification permission
     val requestPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
+        contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
-        if (isGranted) {
-            // Permission granted; enable notifications if the toggle is on
-            if (notificationsEnabled) {
+        scope.launch {
+            if (isGranted) {
+                snackbarHostState.showSnackbar("Notifications permission granted")
                 NotificationScheduler.scheduleReadingReminder(context)
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                    val shouldShowRationale = activity?.let { ActivityCompat.shouldShowRequestPermissionRationale(it, Manifest.permission.POST_NOTIFICATIONS) }
+                    if (shouldShowRationale == false){
+                        showSettingsDialog = true
+                    }else{
+                        snackbarHostState.showSnackbar("Notifications permission denied")
+                    }
+                }
             }
-        } else {
-            // Permission denied; disable notifications
-            viewModel.setNotificationsEnabled(false)
         }
+        viewModel.setNotificationsEnabled(isGranted)
     }
 
-    // Schedule or cancel notifications when the toggle changes
-    LaunchedEffect(notificationsEnabled) {
-        if (notificationsEnabled) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
-                // Request permission if not granted
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            } else {
-                // Permission already granted; schedule notifications
-                NotificationScheduler.scheduleReadingReminder(context)
-            }
-        } else {
-            NotificationScheduler.cancelReadingReminder(context)
-        }
-    }
+
+
+
 
     LaunchedEffect(showClearMessage) {
         if (showClearMessage){
@@ -119,7 +119,6 @@ fun SettingsScreen(
                         viewModel.clearAllData()
                         showClearMessage = true
                         showClearDataDialog = false
-                        if (notificationsEnabled) NotificationScheduler.cancelReadingReminder(context)
                     }
                 ) {
                     Text("Confirm")
@@ -133,7 +132,31 @@ fun SettingsScreen(
         )
     }
 
-
+    if (showSettingsDialog) {
+        AlertDialog(
+            onDismissRequest = { showSettingsDialog = false },
+            title = { Text("Permission Required") },
+            text = { Text("Notifications are disabled. Please enable them in app settings.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showSettingsDialog = false
+                        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                        }
+                        context.startActivity(intent)
+                    }
+                ) {
+                    Text("Go to Settings")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSettingsDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -173,8 +196,24 @@ fun SettingsScreen(
                 }
                 Switch(
                     checked = notificationsEnabled,
-                    onCheckedChange = { enabled ->
-                        viewModel.setNotificationsEnabled(enabled)
+                    onCheckedChange = { isChecked ->
+                        if (isChecked){
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                                val permission = Manifest.permission.POST_NOTIFICATIONS
+                                if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED) {
+                                    viewModel.setNotificationsEnabled(true)
+                                    NotificationScheduler.scheduleReadingReminder(context)
+                                } else {
+                                    requestPermissionLauncher.launch(permission)
+                                }
+                            }else{
+                                viewModel.setNotificationsEnabled(true)
+                                NotificationScheduler.scheduleReadingReminder(context)
+                            }
+                        }else{
+                            viewModel.setNotificationsEnabled(false)
+                            NotificationScheduler.cancelReadingReminder(context)
+                        }
                     }
                 )
             }
@@ -263,6 +302,5 @@ fun SettingsScreen(
         }
 
     }
-
 
 }
