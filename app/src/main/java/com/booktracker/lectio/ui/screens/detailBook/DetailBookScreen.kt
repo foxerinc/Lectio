@@ -91,7 +91,9 @@ fun DetailBookScreen(
 
     LaunchedEffect(showDeleteMessage) {
         if (showDeleteMessage){
-            deleteBookResult?.let { snackbarHostState.showSnackbar(it) }
+            bookWithGenres?.let {
+                viewModel.deleteBook(it)
+            }
             viewModel.clearDeleteBookResult()
             navController.popBackStack()
         }
@@ -108,11 +110,8 @@ fun DetailBookScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        bookWithGenres?.let {
-                            viewModel.deleteBook(it)
-                        }
-                        showDeleteMessage = true
                         showDeleteBookDialog = false
+                        showDeleteMessage = true
                     }
                 ) {
                     Text("Confirm")
@@ -148,7 +147,12 @@ fun DetailBookScreen(
                     actionIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
-        }
+        },
+        snackbarHost = {
+            androidx.compose.material3.SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(16.dp)
+            )}
     ) { innerPadding ->
         bookWithGenres?.let { bookData ->
 
@@ -470,12 +474,14 @@ fun DetailBookScreen(
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         } ?: run {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
+                    .padding(innerPadding)
+                    .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
