@@ -169,7 +169,7 @@ fun EditBookScreen(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp)
+                    .padding(16.dp)
             ){
 
                 ImagePicker(
@@ -215,7 +215,7 @@ fun EditBookScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     OutlinedButton(
