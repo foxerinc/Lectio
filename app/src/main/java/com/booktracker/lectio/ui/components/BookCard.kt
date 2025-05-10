@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,83 +49,97 @@ import com.booktracker.lectio.utils.BookStatusType
 fun BookCard(
     book: BookWithGenres,
     onClick: (Int) -> Unit,
-
 ) {
     Card(
         modifier = Modifier
             .clickable { onClick(book.book.id) }
             .fillMaxWidth()
-            .wrapContentHeight()
-            .heightIn(max = 400.dp, min = 330.dp),
+            .heightIn(max = 200.dp)
+            .padding(horizontal = 0.dp, vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+                ,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
+            // Book Cover Image (Left/Start, height = 160.dp, width = 80.dp)
             AsyncImage(
                 model = book.book.coverImageUri ?: R.drawable.baseline_image_24,
                 contentDescription = book.book.title,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(8.dp))
+                    .width(100.dp)
+                    .height(160.dp)
+                    .fillMaxHeight()
+
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
-            // Book Title
-            Text(
-                text = book.book.title,
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.primary,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 3
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Genre Texts
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.fillMaxWidth()
+            // Text Details (Title, Author, Genre - Middle, centered vertically)
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start,
             ) {
-                book.genres.take(2).forEach {
+                Text(
+                    text = book.book.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                )
+
+                Spacer(modifier = Modifier.height(5.dp))
+
+                if (!book.book.author.isNullOrBlank()) {
                     Text(
-                        text = it.name,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = book.book.author,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
+                }
+
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    book.genres.take(5).forEach { genre ->
+                        Text(
+                            text = genre.name,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Author (jika ada)
-            if (!book.book.author.isNullOrBlank()) {
-                Text(
-                    text = book.book.author,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Progress
-            val progress = if (book.book.totalPage == 0) 0f
-            else book.book.currentPage / book.book.totalPage.toFloat()
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+            // Progress Section (Right/End, centered vertically)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(start = 4.dp, end = 10.dp) // Reduced from 8.dp
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.size(40.dp)
                 ) {
+                    val progress = if (book.book.totalPage == 0) 0f
+                    else book.book.currentPage / book.book.totalPage.toFloat()
                     CircularProgressIndicator(
                         progress = { progress },
                         modifier = Modifier.fillMaxSize(),
@@ -134,76 +149,57 @@ fun BookCard(
                     )
                     Text(
                         text = "${(progress * 100).toInt()}%",
-                        style = MaterialTheme.typography.labelSmall
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
                     text = "Page ${book.book.currentPage}/${book.book.totalPage}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun BookCardPreview() {
+    val sampleBook = BookWithGenres(
+        book = Book(
+            id = 1,
+            title = "Book Title Book Title Book Title Book Title",
+            author = "Author 1",
+            currentPage = 50,
+            totalPage = 200,
+            coverImageUri = null,
+            status = BookStatusType.CURRENTLY_READING,
+            description = "",
+            isFavorite = false,
+            personalRating = 4.5f,
+            notes = "",
+            bookAddedInMillis = 0L,
+        ),
+        genres = listOf(
+            Genre(1, "Fiction"),
+            Genre(2, "Adventure")
+        )
+    )
 
-
-    @Preview(showBackground = true)
-    @Composable
-    fun BookCardListPreview() {
-        val sampleBooks = List(4) { index ->
-            BookWithGenres(
-                book = Book(
-                    id = index,
-                    title = if (index == 1) "Book Title ${index} Checking Long Tittle how to see it and how to not see it" else "Book Title ${index} ",
-                    author = "Author $index",
-                    currentPage = 50 + index * 10,
-                    totalPage = 200,
-                    coverImageUri = null,
-                    status = BookStatusType.CURRENTLY_READING,
-                    description = "",
-                    isFavorite = false,
-                    personalRating = 4.5f,
-                    notes = "",
-                    bookAddedInMillis = 0L,
-                ),
-                genres = listOf(
-                    Genre(1, "Fiction"),
-                    Genre(2, "Adventure")
-                )
+    LectioTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            BookCard(
+                book = sampleBook,
+                onClick = {},
             )
         }
-
-        LectioTheme {
-            Surface(color = MaterialTheme.colorScheme.background) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
-                ){
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 160.dp),
-                        contentPadding = PaddingValues(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.height(700.dp)
-                    ) {
-                        items(sampleBooks) { book ->
-                            BookCard(
-                                book = book,
-                                onClick = {},
-                            )
-                        }
-                    }
-                }
-
-            }
-        }
     }
+}
 
 
