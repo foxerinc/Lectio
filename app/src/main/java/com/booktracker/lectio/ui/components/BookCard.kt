@@ -54,7 +54,7 @@ fun BookCard(
         modifier = Modifier
             .clickable { onClick(book.book.id) }
             .fillMaxWidth()
-            .heightIn(max = 200.dp)
+            .heightIn(max = 150.dp)
             .padding(horizontal = 0.dp, vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
@@ -75,8 +75,8 @@ fun BookCard(
                 contentDescription = book.book.title,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .width(100.dp)
-                    .height(160.dp)
+                    .width(80.dp)
+                    .height(120.dp)
                     .fillMaxHeight()
 
             )
