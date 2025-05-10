@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -76,12 +78,10 @@ fun FavoriteScreen(
                     )
                 }
             }else{
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 160.dp),
+                LazyColumn (
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxHeight()
+//                    modifier = Modifier.fillMaxHeight()
                 ){
                     items(favoriteBooks){ book ->
                         BookCard(
