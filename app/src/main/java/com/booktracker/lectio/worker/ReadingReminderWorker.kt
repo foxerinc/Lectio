@@ -37,60 +37,58 @@ class ReadingReminderWorker @AssistedInject constructor(
         Log.d("ReadingReminderWorker", "doWork() called")
         // Fetch Book With Currently Reading Status
         val currentlyReadingBooks = bookUseCases.getBooksByStatusUseCase(BookStatusType.CURRENTLY_READING).first()
-        if (currentlyReadingBooks.isEmpty()) {
-            return Result.success()
-        }
 
-        val totalOfCurrentlyReadingBooks = currentlyReadingBooks.size
-        // Select the book with the highest progress percentage
-        val bookWithHighestProgress = currentlyReadingBooks.maxByOrNull { bookWithGenres ->
-            if (bookWithGenres.book.totalPage > 0) {
-                (bookWithGenres.book.currentPage.toFloat() / bookWithGenres.book.totalPage) * 100
+        val notifTittle: String
+        val notifMessage: String
+
+        if (currentlyReadingBooks.isEmpty()) {
+            notifTittle = "You have 0 currently reading book"
+            notifMessage = "Come back to the app to add some book to read!"
+        }else{
+            val totalOfCurrentlyReadingBooks = currentlyReadingBooks.size
+            // Select the book with the highest progress percentage
+            val bookWithHighestProgress = currentlyReadingBooks.maxByOrNull { bookWithGenres ->
+                if (bookWithGenres.book.totalPage > 0) {
+                    (bookWithGenres.book.currentPage.toFloat() / bookWithGenres.book.totalPage) * 100
+                } else {
+                    0f
+                }
+            } ?: currentlyReadingBooks.first()
+
+            val progress = if (bookWithHighestProgress.book.totalPage > 0) {
+                ((bookWithHighestProgress.book.currentPage.toFloat() / bookWithHighestProgress.book.totalPage) * 100).toInt()
             } else {
                 0f
+
             }
-        } ?: currentlyReadingBooks.first()
+            notifTittle = "You have $totalOfCurrentlyReadingBooks currently reading book"
+            notifMessage = "Time to Read: ${bookWithHighestProgress.book.title} - You're $progress% through '${bookWithHighestProgress.book.title}. Keep going!"
 
-        val progress = if (bookWithHighestProgress.book.totalPage > 0) {
-            ((bookWithHighestProgress.book.currentPage.toFloat() / bookWithHighestProgress.book.totalPage) * 100).toInt()
-        } else {
-            0f
 
         }
 
-        val title = "You have $totalOfCurrentlyReadingBooks currently reading book"
-        val message = if (totalOfCurrentlyReadingBooks > 1){
-            "Time to Read: ${bookWithHighestProgress.book.title} - You're $progress% through '${bookWithHighestProgress.book.title}. Keep going!"
-        }else{
-            "Come back to the app to add some book to read!"
-        }
 
         // Create a PendingIntent for the notification
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        } else {
-            PendingIntent.FLAG_UPDATE_CURRENT
-        }
 
         val pendingIntent = PendingIntent.getActivity(
             applicationContext,
             NOTIFICATION_ID,
             intent,
-            pendingIntentFlags
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Create notification channel (required for Android 8.0+)
+
         createNotificationChannel()
 
         // Build the notification
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(title)
-            .setContentText(message)
+            .setContentTitle(notifTittle)
+            .setContentText(notifMessage)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
@@ -107,17 +105,15 @@ class ReadingReminderWorker @AssistedInject constructor(
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Reading Reminders"
-            val descriptionText = "Notifications to remind you to continue reading your books"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            val notificationManager: NotificationManager =
-                applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+        val name = "Reading Reminders"
+        val descriptionText = "Notifications to remind you to continue reading your books"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            description = descriptionText
         }
+        val notificationManager: NotificationManager =
+            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
 
