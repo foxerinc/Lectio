@@ -47,8 +47,8 @@ class AddBookViewModel @Inject constructor(private val bookUseCases: BookUseCase
 
     private fun fetchGenres() {
         genreUseCases.getGenresUseCase().onEach { fetchedGenres ->
-            _genres.value = fetchedGenres.ifEmpty {
-                listOf(
+            if (fetchedGenres.isEmpty()) {
+                val defaultGenres = listOf(
                     Genre(id = 0, name = "Fiction"),
                     Genre(id = 0, name = "Non-Fiction"),
                     Genre(id = 0, name = "Fantasy"),
@@ -56,6 +56,10 @@ class AddBookViewModel @Inject constructor(private val bookUseCases: BookUseCase
                     Genre(id = 0, name = "Mystery"),
                     Genre(id = 0, name = "Romance")
                 )
+                _genres.value = defaultGenres
+                genreUseCases.insertGenresUseCase(defaultGenres)
+            } else {
+                _genres.value = fetchedGenres
             }
         }.launchIn(viewModelScope)
     }

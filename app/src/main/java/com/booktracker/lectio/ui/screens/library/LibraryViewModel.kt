@@ -83,6 +83,10 @@ class LibraryViewModel @Inject constructor(
             SortOption.RATING -> filtered.sortedByDescending { it.book.personalRating }
             SortOption.GENRE -> filtered.sortedBy { it.genres.firstOrNull()?.name ?: "" }
             SortOption.DATE_ADDED -> filtered.sortedByDescending { it.book.bookAddedInMillis }
+            SortOption.PROGRESS -> filtered.sortedByDescending {
+                val total = it.book.totalPage.takeIf { it > 0 } ?: 1
+                it.book.currentPage.toFloat() / total
+            }
         }
 
         _filteredBooks.value = filtered
