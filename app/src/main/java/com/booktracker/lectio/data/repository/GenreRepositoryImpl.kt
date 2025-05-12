@@ -51,4 +51,8 @@ class GenreRepositoryImpl @Inject constructor(
     override suspend fun clearGenresForBook(bookId: Int) {
         appDatabase.genreDao.deleteGenresByBook(bookId)
     }
+
+    override suspend fun deleteAllGenres() {
+        appDatabase.genreDao.deleteAllGenres()
+    }
 }

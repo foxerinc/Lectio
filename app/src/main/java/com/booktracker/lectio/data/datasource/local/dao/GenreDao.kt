@@ -36,4 +36,7 @@ interface GenreDao {
 
     @Query("UPDATE book_genre_cross_ref SET genre_id = :genreId WHERE book_id = :bookId")
     suspend fun updateGenreCrossRef(bookId: Int, genreId: Int)
+
+    @Query("DELETE FROM genres")
+    suspend fun deleteAllGenres()
 }

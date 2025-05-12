@@ -11,6 +11,7 @@ import com.booktracker.lectio.domain.repository.GenreRepository
 import com.booktracker.lectio.domain.usecase.AddBookWithGenreUseCase
 import com.booktracker.lectio.domain.usecase.BookUseCases
 import com.booktracker.lectio.domain.usecase.DeleteAllBookUseCase
+import com.booktracker.lectio.domain.usecase.DeleteAllGenresUseCase
 import com.booktracker.lectio.domain.usecase.DeleteBookUseCase
 import com.booktracker.lectio.domain.usecase.GenreUseCases
 import com.booktracker.lectio.domain.usecase.GetAllBookUseCase
@@ -78,7 +79,8 @@ object AppModule {
     fun provideGenreUseCases(genreRepository: GenreRepository): GenreUseCases {
         return GenreUseCases(
             getGenresUseCase = GetAllGenresUseCase(genreRepository),
-            insertGenresUseCase = InsertGenresUseCase(genreRepository)
+            insertGenresUseCase = InsertGenresUseCase(genreRepository),
+            deleteAllGenresUseCase = DeleteAllGenresUseCase(genreRepository)
         )
     }
 

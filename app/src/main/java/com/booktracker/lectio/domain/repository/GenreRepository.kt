@@ -12,4 +12,6 @@ interface GenreRepository {
     suspend fun getGenreByName(name: String): Genre?
     suspend fun assignGenreToBook(bookId: Int, genreId: Int)
     suspend fun clearGenresForBook(bookId: Int)
+    suspend fun deleteAllGenres()
+
 }
