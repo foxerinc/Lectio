@@ -66,13 +66,28 @@ class EditBookViewModel @Inject constructor(private val bookUseCase: BookUseCase
         isFavorite: Boolean,
     ) {
 
-        if (validateForm(title, author, status, currentPage, totalPage, notes, personalRating, selectedGenre)) return
+        val (isValid, errors) = BookUtils.validateBookForm(
+            title, author, status, currentPage, totalPage, notes, personalRating, selectedGenre
+        )
 
-        val adjustedCurrentPage = when (status) {
-            BookStatusType.WANT_TO_READ -> 0
-            BookStatusType.FINISHED_READING -> totalPage
-            BookStatusType.CURRENTLY_READING -> currentPage
+        titleError.value = errors.title
+        authorError.value = errors.author
+        genresError.value = errors.genres
+        totalPagesError.value = errors.totalPages
+        currentPageError.value = errors.currentPage
+        notesError.value = errors.notes
+        ratingError.value = errors.rating
+
+        if (!isValid) {
+            _errorMessage.value = "All required fields need to be filled"
+            return
         }
+
+        // Adjust currentPage based on status
+        val adjustedCurrentPage = BookUtils.adjustedCurrentPage(status, currentPage, totalPage)
+
+        // Clean & normalized genres
+        val cleanedGenres = BookUtils.validateAndAdjustedGenres(selectedGenre)
 
         viewModelScope.launch {
             try {
@@ -92,7 +107,7 @@ class EditBookViewModel @Inject constructor(private val bookUseCase: BookUseCase
                     isFavorite = isFavorite
                 )
                 withContext(Dispatchers.IO){
-                    val update = bookUseCase.updateBookUseCase(book, selectedGenre)
+                    val update = bookUseCase.updateBookUseCase(book, cleanedGenres)
                     if (update.isFailure) {
                         _errorMessage.value = update.exceptionOrNull()?.message
                         return@withContext
@@ -105,78 +120,6 @@ class EditBookViewModel @Inject constructor(private val bookUseCase: BookUseCase
             }
         }
 
-    }
-
-    private fun validateForm(
-        title: String,
-        author: String,
-        status: BookStatusType,
-        currentPage: Int,
-        totalPage: Int,
-        notes: String,
-        personalRating: Float,
-        selectedGenre: List<Genre>,
-    ): Boolean {
-        var isValid = true
-
-        // Reset all error states
-        titleError.value = null
-        authorError.value = null
-        genresError.value = null
-        totalPagesError.value = null
-        currentPageError.value = null
-        notesError.value = null
-        ratingError.value = null
-
-        // Validate title
-        if (title.isBlank()) {
-            titleError.value = "Title is required"
-            isValid = false
-        }
-
-        // Validate author
-        if (author.isBlank()) {
-            authorError.value = "Author is required"
-            isValid = false
-        }
-
-        // Validate genres
-        if (selectedGenre.isEmpty()) {
-            genresError.value = "At least one genre is required"
-            isValid = false
-        }
-
-        // Validate total pages
-        if (totalPage <= 0) {
-            totalPagesError.value = "Total pages must be a positive number"
-            isValid = false
-        }
-
-        // Validate current page for CURRENTLY_READING status
-        if (status == BookStatusType.CURRENTLY_READING && (currentPage < 0 || currentPage > totalPage)) {
-            currentPageError.value = "Current page must be between 0 and $totalPage"
-            isValid = false
-        }
-
-        // Validate notes and personal rating for FINISHED_READING status
-        if (status == BookStatusType.FINISHED_READING) {
-            if (notes.isBlank()) {
-                notesError.value = "Notes are required for finished books"
-                isValid = false
-            }
-            if (personalRating <= 0f) {
-                ratingError.value = "Personal rating is required for finished books"
-                isValid = false
-            }
-        }
-
-        // If validation fails, show a static error message and return
-        if (!isValid) {
-            _errorMessage.value = "All required fields need to be filled"
-            return true
-        }
-
-        return false
     }
 
 
