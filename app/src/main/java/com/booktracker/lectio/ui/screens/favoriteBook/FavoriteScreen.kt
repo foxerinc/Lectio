@@ -80,8 +80,6 @@ fun FavoriteScreen(
             }else{
                 LazyColumn (
                     contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-//                    modifier = Modifier.fillMaxHeight()
                 ){
                     items(favoriteBooks){ book ->
                         BookCard(
