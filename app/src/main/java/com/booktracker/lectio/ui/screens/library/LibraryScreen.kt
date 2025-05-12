@@ -227,9 +227,9 @@ fun LibraryScreen(
             // Header showing the count of filtered vs total books
             Text(
                 text = "Showing ${filteredBooks.size} out of ${allBooks.size} books",
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(8.dp)
             )
 
             // Book List
@@ -250,7 +250,8 @@ fun LibraryScreen(
                 }
             }else{
                 LazyColumn(
-                    state = listState
+                    state = listState,
+                    contentPadding = PaddingValues(8.dp)
                 ){
                     items(filteredBooks){ book ->
                         BookCard(
