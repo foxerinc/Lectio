@@ -79,7 +79,6 @@ fun DetailBookScreen(
 
     ) {
     val bookWithGenres by viewModel.bookDetail.collectAsState()
-    val deleteBookResult by viewModel.deleteBookResult.collectAsState()
 
     var showDeleteBookDialog by remember { mutableStateOf(false) }
     var showDeleteMessage by remember { mutableStateOf(false) }
@@ -196,7 +195,7 @@ fun DetailBookScreen(
                             model = bookData.book.coverImageUri ?: R.drawable.baseline_image_24,
                             contentDescription = "Book Cover",
                             modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.FillBounds
                         )
 
                     }
