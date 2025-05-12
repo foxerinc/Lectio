@@ -2,7 +2,7 @@
 
 **Lectio** is a book tracker app with a modern android app designed to help book enthusiasts track their reading progress, manage their library, and receive reading reminders.Built with Jetpack Compose and powered by WorkManager, Lectio offers a clean, intuitive interface and robust functionality for personal book management. Lectio is a personal project developed to explore Android development with Compose, navigation, clean architecture, MVVM architecture, and background tasks. It allows users to add books, view and filter their library, edit entries, and clear their data, all while supporting customizable themes and notifications.
 
-[🎥 Demo Aplikasi Lectio https://drive.google.com/file/d/149ebK5TOMMkh2mPCIOIUlUOT6VC-mJCu/view?usp=drive_link]
+[🎥 Watch the Lectio Demo](https://drive.google.com/file/d/149ebK5TOMMkh2mPCIOIUlUOT6VC-mJCu/view?usp=drive_link)
 
 ## ⚠️ Current Limitations
 - No backup/restore or sync with external services
@@ -44,7 +44,7 @@
   
 
 ## 📸 Screenshot
-Splash screen https://drive.google.com/file/d/1kz0ZcQSbgwbjDTdlBp7eyJjC2MV74HSr/view?usp=drive_link
+[**Splash Screen**](https://drive.google.com/file/d/1kz0ZcQSbgwbjDTdlBp7eyJjC2MV74HSr/view?usp=drive_link)
 Dashboard screen https://drive.google.com/file/d/17drZqJS39PTkSjhR1_6KtA7hn6uQJV-m/view?usp=drive_link
 Library screen https://drive.google.com/file/d/1kwXp_iWq3BwpPJ9cc7xubBVOMl025LIw/view?usp=drive_link
 Add book screen https://drive.google.com/file/d/1u5bEKsE4sH660jdA2uq8YxifoX8qU9ZO/view?usp=drive_link
