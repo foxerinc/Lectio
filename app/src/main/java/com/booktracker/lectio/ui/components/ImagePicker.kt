@@ -138,7 +138,7 @@ fun ImagePicker(
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.FillBounds
 
                     )
                 }
