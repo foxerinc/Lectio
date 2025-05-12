@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -45,6 +47,7 @@ import com.booktracker.lectio.ui.theme.LectioTheme
 import com.booktracker.lectio.utils.BookStatusType
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BookCard(
     book: BookWithGenres,
@@ -113,15 +116,17 @@ fun BookCard(
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    maxLines = 2
                 ) {
-                    book.genres.take(5).forEach { genre ->
+                    val genresToShow = book.genres.take(5)
+                    genresToShow.forEachIndexed { index, genre ->
                         Text(
-                            text = genre.name,
+                            text = if (index == genresToShow.lastIndex) genre.name else "${genre.name},",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurface,
-                            maxLines = 2,
+                            maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                     }
