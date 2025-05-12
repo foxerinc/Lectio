@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 import androidx.compose.runtime.State
+import com.booktracker.lectio.utils.BookUtils
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -77,14 +78,29 @@ class AddBookViewModel @Inject constructor(private val bookUseCases: BookUseCase
         selectedGenre: List<Genre>
     ) {
 
-        if (validateForm(title, author, status, currentPage, totalPage, notes, personalRating, selectedGenre)) return
+        val (isValid, errors) = BookUtils.validateBookForm(
+            title, author, status, currentPage, totalPage, notes, personalRating, selectedGenre
+        )
+
+        titleError.value = errors.title
+        authorError.value = errors.author
+        genresError.value = errors.genres
+        totalPagesError.value = errors.totalPages
+        currentPageError.value = errors.currentPage
+        notesError.value = errors.notes
+        ratingError.value = errors.rating
+
+        if (!isValid) {
+            _errorMessage.value = "All required fields need to be filled"
+            return
+        }
 
         // Adjust currentPage based on status
-        val adjustedCurrentPage = when (status) {
-            BookStatusType.WANT_TO_READ -> 0
-            BookStatusType.FINISHED_READING -> totalPage
-            BookStatusType.CURRENTLY_READING -> currentPage
-        }
+        val adjustedCurrentPage = BookUtils.adjustedCurrentPage(status, currentPage, totalPage)
+
+        // Clean & normalized genres
+        val cleanedGenres = BookUtils.validateAndAdjustedGenres(selectedGenre)
+
 
         val newBook = Book(
             id = 0,
@@ -103,7 +119,7 @@ class AddBookViewModel @Inject constructor(private val bookUseCases: BookUseCase
 
         viewModelScope.launch {
             try {
-                bookUseCases.addBookWithGenreUseCase(newBook, selectedGenre)
+                bookUseCases.addBookWithGenreUseCase(newBook, cleanedGenres)
                 _isBookAdded.value = true
                 _errorMessage.value = null
             } catch (e: Exception) {
@@ -112,68 +128,6 @@ class AddBookViewModel @Inject constructor(private val bookUseCases: BookUseCase
         }
     }
 
-    private fun validateForm(title: String,
-                             author: String,
-                             status: BookStatusType,
-                             currentPage: Int,
-                             totalPage: Int,
-                             notes: String,
-                             personalRating: Float,
-                             selectedGenre: List<Genre>) : Boolean {
-        var isValid = true
-
-        titleError.value = null
-        authorError.value = null
-        genresError.value = null
-        totalPagesError.value = null
-        currentPageError.value = null
-        notesError.value = null
-        ratingError.value = null
-
-        // Validation
-        if (title.isBlank()) {
-            titleError.value = "Title cannot be empty"
-            isValid = false
-        }
-
-        if (author.isBlank()) {
-            authorError.value = "Author cannot be empty"
-            isValid = false
-        }
-
-        if (selectedGenre.isEmpty()) {
-            genresError.value = "At least one genre is required"
-            isValid = false
-        }
-
-
-        if (totalPage <= 0) {
-            totalPagesError.value = "Total pages must be a positive number"
-            isValid = false
-        }
-
-        if (status == BookStatusType.FINISHED_READING) {
-            if (notes.isBlank()) {
-                notesError.value = "Notes are required for finished books"
-                isValid = false
-            }
-            if (personalRating <= 0f) {
-                ratingError.value = "Personal rating is required for finished books"
-                isValid = false
-            }
-        }
-        if (status == BookStatusType.CURRENTLY_READING && (currentPage < 0 || currentPage > totalPage)) {
-            currentPageError.value = "Current page must be between 0 and $totalPage"
-            isValid = false
-        }
-
-        if (!isValid) {
-            _errorMessage.value = "All required fields need to be filled"
-            return true
-        }
-
-        return false
-    }
 
     fun addNewGenre(genreName: String) {
         if (genreName.isBlank()) return
