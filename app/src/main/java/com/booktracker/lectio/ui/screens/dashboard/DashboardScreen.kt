@@ -99,8 +99,7 @@ fun DashboardScreen(
             } else {
                 LazyColumn(
                     state = listState,
-                    contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(8.dp)
                 ) {
                     items(currentlyReadingBooks) { book ->
                         BookCard(
