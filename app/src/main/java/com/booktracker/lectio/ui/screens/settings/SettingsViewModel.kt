@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.booktracker.lectio.domain.usecase.BookUseCases
+import com.booktracker.lectio.domain.usecase.GenreUseCases
 import com.booktracker.lectio.utils.NotificationScheduler
 import com.booktracker.lectio.utils.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
-    private val bookUseCases: BookUseCases
+    private val bookUseCases: BookUseCases,
+    private val genreUseCases: GenreUseCases
 ): ViewModel() {
 
     private val _themePreference = MutableStateFlow(PreferencesManager.ThemePreference.SYSTEM)
@@ -100,6 +102,7 @@ class SettingsViewModel @Inject constructor(
             try {
                 withContext(Dispatchers.IO){
                     bookUseCases.deleteAllBookUseCase()
+                    genreUseCases.deleteAllGenresUseCase()
                 }
                 _clearDataResult.value = "All data cleared successfully"
             } catch (e: Exception) {
