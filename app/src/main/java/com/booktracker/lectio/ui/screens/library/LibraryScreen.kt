@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Search
@@ -42,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,11 +64,16 @@ fun LibraryScreen(
     onBookClick: (Int) -> Unit
 ) {
     var showSearchBar by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
     val allBooks by viewModel.books
     val filteredBooks by viewModel.filteredBooks
     val searchQuery by viewModel.searchQuery
     val selectedStatusFilter by viewModel.selectedStatusFilter
     val sortOption by viewModel.sortOption
+
+    LaunchedEffect(sortOption, searchQuery, selectedStatusFilter) {
+        listState.scrollToItem(0)
+    }
 
     Scaffold(
         topBar = {
@@ -243,6 +250,7 @@ fun LibraryScreen(
                 }
             }else{
                 LazyColumn(
+                    state = listState
                 ){
                     items(filteredBooks){ book ->
                         BookCard(

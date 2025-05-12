@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +46,7 @@ fun DashboardScreen(
     val totalPagesRead by viewModel.totalPagesRead.collectAsState()
     val finishedBooksCount by viewModel.finishedBooksCount.collectAsState()
     val currentlyReadingBooksCount by viewModel.currentlyReadingBooksCount.collectAsState()
+    val listState = rememberLazyListState()
 
     Scaffold(
         topBar = {
@@ -96,6 +98,7 @@ fun DashboardScreen(
                 )
             } else {
                 LazyColumn(
+                    state = listState,
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
