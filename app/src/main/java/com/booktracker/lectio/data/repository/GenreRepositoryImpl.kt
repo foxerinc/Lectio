@@ -22,6 +22,9 @@ class GenreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun insertGenres(genres: List<Genre>) {
+        appDatabase.genreDao.insertGenres(genres.map { it.toEntity() })
+    }
 
     override suspend fun insertGenre(genre: Genre): Long {
         return appDatabase.genreDao.insertGenre(genre.toEntity())

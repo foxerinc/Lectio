@@ -18,6 +18,7 @@ import com.booktracker.lectio.domain.usecase.GetAllGenresUseCase
 import com.booktracker.lectio.domain.usecase.GetBookWithGenresByIdUseCase
 import com.booktracker.lectio.domain.usecase.GetBooksByStatusUseCase
 import com.booktracker.lectio.domain.usecase.GetFavoriteBookUseCase
+import com.booktracker.lectio.domain.usecase.InsertGenresUseCase
 import com.booktracker.lectio.domain.usecase.UpdateBookFavoriteStatusUseCase
 import com.booktracker.lectio.domain.usecase.UpdateBookWithGenreUseCase
 import dagger.Module
@@ -76,9 +77,11 @@ object AppModule {
     @Singleton
     fun provideGenreUseCases(genreRepository: GenreRepository): GenreUseCases {
         return GenreUseCases(
-            getGenresUseCase = GetAllGenresUseCase(genreRepository)
+            getGenresUseCase = GetAllGenresUseCase(genreRepository),
+            insertGenresUseCase = InsertGenresUseCase(genreRepository)
         )
     }
+
 
     @Provides
     @Singleton

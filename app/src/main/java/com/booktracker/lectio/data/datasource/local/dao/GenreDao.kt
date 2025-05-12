@@ -15,6 +15,9 @@ interface GenreDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGenre(genreEntity: GenreEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGenres(genres: List<GenreEntity>)
+
     @Query("SELECT * FROM genres ORDER BY name ASC")
     fun getAllGenres(): Flow<List<GenreEntity>>
 
