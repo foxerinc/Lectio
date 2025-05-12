@@ -46,7 +46,7 @@
 ## 📸 Screenshot
 Splash screen https://drive.google.com/file/d/1kz0ZcQSbgwbjDTdlBp7eyJjC2MV74HSr/view?usp=drive_link
 Dashboard screen https://drive.google.com/file/d/17drZqJS39PTkSjhR1_6KtA7hn6uQJV-m/view?usp=drive_link
-Library screen
+Library screen https://drive.google.com/file/d/1kwXp_iWq3BwpPJ9cc7xubBVOMl025LIw/view?usp=drive_link
 Add book screen https://drive.google.com/file/d/1u5bEKsE4sH660jdA2uq8YxifoX8qU9ZO/view?usp=drive_link
 Favorite screen https://drive.google.com/file/d/1JhtVClYgcqZr_OnwGCADAkOaXNCNv2qI/view?usp=drive_link
 Settings screen https://drive.google.com/file/d/12tF4hefy83RS6mVNjVBG_NZst9A4NAGM/view?usp=drive_link
