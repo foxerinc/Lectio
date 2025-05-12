@@ -25,7 +25,7 @@ fun DetailItem(
             fontWeight = FontWeight.Medium
         )
         Text(
-            text = value,
+            text = value.ifBlank { "-" },
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 2.dp)
